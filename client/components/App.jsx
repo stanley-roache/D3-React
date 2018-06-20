@@ -4,7 +4,7 @@ import {HashRouter as Router, Route} from 'react-router-dom'
 import BarChart from './BarChart'
 
 const App = () => {
-  let data = Array(20).fill(0).map(e => Math.random()*20),
+  let data = Array(22).fill(0).map(e => Math.random()*20),
       size = [500, 500]
 
   return (
