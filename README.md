@@ -21,6 +21,10 @@ The difficulty with this approach lies in communication between React and D3 abo
 ~~maybe I'll try to implement both~~ - not interesting enough right now
 </details>
 
+#### More merging tactics: react-faux-dom
+
+This looks awesome and I think using it would help to understand rendering deeper. D3 and React are made to cooperate through a library <a href="https://github.com/Olical/react-faux-dom">react-faux-dom</a> which generates a dummy dom through react, passes this to D3, this allows full use of both libraries for animation (I don't quite get it at this stage). Perhaps the first method is simpler but this looks really interesting
+
 
 
 
