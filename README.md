@@ -16,4 +16,9 @@ The difficulty with this approach lies in communication between React and D3 abo
 
 This core functionality can be written into React, this kind of takes the teeth out of D3 in what is being asked to do but fair enough. Often this is easier when the relationship between data and display is kept simple. For more advanced relationships, the first method of passing a node to D3 can be easier,
 
-maybe I'll try to implement both
+~~maybe I'll try to implement both~~ - not interesting enough right now
+
+###Note Dump
+- Climate data to play with:
+  - http://worldclim.org/version2
+  - 
