@@ -13,6 +13,7 @@ The difficulty with this approach lies in communication between React and D3 abo
   <summary>
     <b> Another method: re-Implementing D3 functions in react</b>
   </summary>
+    <br>
     <a href="https://medium.com/front-end-hacking/if-and-when-to-use-d3-js-with-react-639a651c6257">Here</a> is an example of     the other way of doing it, D3's power comes down partially to it's enter/update/exit suite, which allows it to check with     the DOM how many elements need creating, updating and deleting respectively as the data is altered.
 
    This core functionality can be written into React, this kind of takes the teeth out of D3 in what is being asked to do but  fair enough. Often this is easier when the relationship between data and display is kept simple. For more advanced relationships, the first method of passing a node to D3 can be easier,
