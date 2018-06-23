@@ -30,4 +30,5 @@ The difficulty with this approach lies in communication between React and D3 abo
   - https://www.ncdc.noaa.gov/cdo-web/datasets
   - http://iridl.ldeo.columbia.edu/
   - https://www.esrl.noaa.gov/gmd/ccgg/trends/gl_full.html
+- <a href="http://sedac.ciesin.columbia.edu/theme/land-use/data/sets/browse">Interesting Land use Data</a>
 - <a href="https://github.com/geotiffjs/geotiff.js">GeoTiff parser</a>
