@@ -21,3 +21,4 @@ This core functionality can be written into React, this kind of takes the teeth 
 ### Note Dump
 - Climate data to play with:
   - http://worldclim.org/version2
+- <a href="https://github.com/geotiffjs/geotiff.js">GeoTiff parser</a>
