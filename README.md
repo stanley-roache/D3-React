@@ -18,7 +18,6 @@ This core functionality can be written into React, this kind of takes the teeth 
 
 ~~maybe I'll try to implement both~~ - not interesting enough right now
 
-###Note Dump
+### Note Dump
 - Climate data to play with:
   - http://worldclim.org/version2
-  - 
