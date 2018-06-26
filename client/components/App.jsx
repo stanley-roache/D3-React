@@ -5,9 +5,10 @@ import PlainFauxBarChart from './PlainFauxBarChart'
 import AnimatableComponent from './AnimatableComponent'
 import AnimatedFauxBarChart from './AnimatedFauxBarChart'
 
+import {CO2} from '../../server/data/co2'
+
 const App = () => {
-  let data = Array(22).fill(0).map(e => Math.random()*20),
-      size = [500, 500]
+  let size = [500, 500]
 
   return (
     <Router>
@@ -16,9 +17,9 @@ const App = () => {
         <h2>Test Component</h2>
         <AnimatableComponent />
         <h2>plain faux render</h2>
-        <PlainFauxBarChart data={data} size={size} />
+        <PlainFauxBarChart data={CO2} size={size} />
         <h2>With connection to faux dom</h2>
-        <AnimatedFauxBarChart data={data} size={size} />
+        <AnimatedFauxBarChart data={CO2} size={size} />
       </div>
     </Router>
   )

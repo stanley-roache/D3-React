@@ -21,7 +21,8 @@ class AnimatedFauxBarChart extends Component {
    }
 
    createBarChart(faux) {
-      const dataMax = max(this.props.data)
+      const ppm = this.props.data.map(e => e.ppm)
+      const dataMax = max(ppm)
       const yScale = scaleLinear()
          .domain([0, dataMax])
          .range([0, this.props.size[1]])
@@ -30,24 +31,24 @@ class AnimatedFauxBarChart extends Component {
         .attr('width', 800)
         .attr('height', 800)
         .selectAll('rect')
-        .data(this.props.data)
+        .data(ppm)
         .enter()
         .append('rect')
 
      select(faux)
         .selectAll('rect')
-        .data(this.props.data)
+        .data(ppm)
         .exit()
         .remove()
 
      select(faux)
         .selectAll('rect')
-        .data(this.props.data)
+        .data(ppm)
         .style('fill', '#fe9922')
-        .attr('x', (d,i) => i * 25)
+        .attr('x', (d,i) => i * 15)
         .attr('y', d => this.props.size[1] - yScale(d))
         .attr('height', d => yScale(d))
-        .attr('width', 25)
+        .attr('width', 15)
    }
 
   render() {
