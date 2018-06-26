@@ -13,32 +13,34 @@ class AnimatedFauxBarChart extends Component {
    }
 
    componentDidMount(props) {
-     const faux = this.props.connectFauxDOM('div', 'chart')
+     const faux = this.props.connectFauxDOM('svg', 'chart')
 
-     
+     this.createBarChart(faux)
+
+     this.props.animateFauxDOM(800)
    }
 
    createBarChart(faux) {
-      const svg = new ReactFauxDOM.createElement('svg')
-
       const dataMax = max(this.props.data)
       const yScale = scaleLinear()
          .domain([0, dataMax])
          .range([0, this.props.size[1]])
 
-     select(svg)
+     select(faux)
+        .attr('width', 800)
+        .attr('height', 800)
         .selectAll('rect')
         .data(this.props.data)
         .enter()
         .append('rect')
 
-     select(svg)
+     select(faux)
         .selectAll('rect')
         .data(this.props.data)
         .exit()
         .remove()
 
-     select(svg)
+     select(faux)
         .selectAll('rect')
         .data(this.props.data)
         .style('fill', '#fe9922')
@@ -46,12 +48,15 @@ class AnimatedFauxBarChart extends Component {
         .attr('y', d => this.props.size[1] - yScale(d))
         .attr('height', d => yScale(d))
         .attr('width', 25)
-
-      return svg.toReact()
    }
 
   render() {
-      return createBarChart()
-   }
+    return <div>{this.props.chart}</div>
+  }
 }
-export default AnimatedFauxBarChart
+
+AnimatedFauxBarChart.defaultProps = {
+  chart: 'loading'
+}
+
+export default withFauxDOM(AnimatedFauxBarChart)

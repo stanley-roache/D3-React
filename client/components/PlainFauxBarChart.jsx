@@ -1,8 +1,9 @@
 import React, { Component } from 'react'
+import ReactFauxDOM from 'react-faux-dom'
+
 import { scaleLinear } from 'd3-scale'
 import { max } from 'd3-array'
 import { select } from 'd3-selection'
-import ReactFauxDOM from 'react-faux-dom'
 
 
 class PlainFauxBarChart extends Component {
@@ -21,10 +22,12 @@ class PlainFauxBarChart extends Component {
          .range([0, this.props.size[1]])
 
      select(svg)
+       .attr('width', 800)
+       .attr('height', 800)
         .selectAll('rect')
         .data(this.props.data)
         .enter()
-        .append('rect')
+          .append('rect')
 
      select(svg)
         .selectAll('rect')
