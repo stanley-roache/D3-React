@@ -31,11 +31,11 @@ class DisplayTemp extends Component {
   render() {
     return (
       <div className="temp-container">
-      <ul>
-        {this.state.tempRecords.length && this.state.tempRecords.map(entry => (
-          <li>{this.state.tempRecords[entry]}</li>
-        ))}
-      </ul>
+        <ul>
+          {this.state.tempRecords.length && this.state.tempRecords.map(entry => (
+            <li>{this.state.tempRecords[entry]}</li>
+          ))}
+        </ul>
       </div>
     )
   }
