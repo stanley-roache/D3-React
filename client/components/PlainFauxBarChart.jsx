@@ -18,6 +18,7 @@ class PlainFauxBarChart extends Component {
       const ppm = this.props.data.map(e => e.ppm)
 
       const dataMax = max(ppm)
+
       const yScale = scaleLinear()
          .domain([0, dataMax])
          .range([0, this.props.size[1]])
