@@ -14,6 +14,7 @@ class DisplayTemp extends Component {
 
     this.state = {
       tempRecords: {},
+      triggerChart: true
     }
 
     this.grabData = this.grabData.bind(this)
@@ -25,8 +26,12 @@ class DisplayTemp extends Component {
   }
 
   componentDidUpdate() {
-    // console.log(this.state.tempRecords);
-    this.createTempChart()
+    if (this.state.triggerChart) {
+      this.createTempChart()
+      this.setState({
+        triggerChart: false
+      })
+    }
   }
 
   createTempChart() {
@@ -41,16 +46,16 @@ class DisplayTemp extends Component {
     const pureData = this.state.tempRecords.map(e => e.annualData[0])
     console.log(pureData);
 
-    const yDomain = [0, max(pureData)]
+    const yDomain = [min(pureData), max(pureData)]
     const xDomain = [1980, 1999]
 
     const yScale = scaleLinear()
        .domain(yDomain)
-       .range([0, size[1]])
+       .range([20, size[1]- 20])
 
      const xScale = scaleLinear()
         .domain(xDomain)
-        .range([0, size[0]])
+        .range([20, size[0] - 20])
 
     svg.selectAll('circle')
       .data(pureData)
@@ -62,18 +67,24 @@ class DisplayTemp extends Component {
     //   .exit()
     //   .remove()
 
-    svg.selectAll('circle')
+    const circles = svg.selectAll('circle')
       .data(pureData)
-      .style('fill', 'red')
-      .attr('cx', (d,i) => xScale(i + 1980))
-      .attr('cy', d => size[1] - yScale(d))
+
+    circles.style('fill', 'red')
+      .attr('cx', (d,i) => 50 + xScale(i + 1980))
+      .attr('cy', d => 50 + size[1] - yScale(d))
       .attr('r', 0)
 
-    this.props.animateFauxDOM(800)
+    circles.transition()
+      .delay((d,i) => i*50)
+      .duration(100)
+      .attr('r', d => 10 + d)
+
+    this.props.animateFauxDOM(1000)
   }
 
   grabData() {
-    return getData('annualavg', 'tas', '1980', '1999', 'NZL')
+    return getData('annualavg', 'tas', '1980', '1999', 'BLR')
       .then(res => {
         let tempRecords = JSON.parse(res.body.text)
         console.log(`json parsed response: `, tempRecords);
