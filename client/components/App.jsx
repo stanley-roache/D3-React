@@ -1,9 +1,6 @@
 import React from 'react'
 import {HashRouter as Router, Route} from 'react-router-dom'
 
-import PlainFauxBarChart from './PlainFauxBarChart'
-import AnimatableComponent from './AnimatableComponent'
-import AnimatedFauxBarChart from './AnimatedFauxBarChart'
 import DisplayTemp from './DisplayTemp'
 
 import {CO2} from '../../server/data/co2'
