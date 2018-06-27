@@ -4,12 +4,13 @@ const bodyParser = require('body-parser')
 const cors = require('cors')
 
 const server = express()
+const router = require('./routes/routes')
 
 server.use(cors('*'))
 
 server.use(bodyParser.json())
 server.use(express.static(path.join(__dirname, '../public')))
 
-//server.use('/api/path', require('./path/to/router'))
+server.use('/', router)
 
 module.exports = server
