@@ -2,7 +2,7 @@ const request = require('superagent')
 
 const apiURL = 'http://api.population.io:80/1.0/population'
 
-function getPopulationByCountryInYear(country, year, callback) {
+function getDetailedByCountryInYear(country, year, callback) {
   console.log(`Server side api fetching population data for ${country} in ${year}`);
   return request.get(`${apiURL}/${year}/${country}/`)
     .set('Content-Type', 'application/json')
@@ -16,7 +16,7 @@ function getPopulationByCountryInYear(country, year, callback) {
     })
 }
 
-function getPopulationByCountryFromXUntilY(country, startString, endString) {
+function getDetailedByCountryFromXUntilY(country, startString, endString) {
   const start = Number(startString)
   const end = Number(endString)
 
@@ -30,7 +30,7 @@ function getPopulationByCountryFromXUntilY(country, startString, endString) {
 
   return Promise.all(
     years.map(year => (
-      getPopulationByCountryInYear(country, year, results => { addYearToData(year, results, data) }))
+      getDetailedByCountryInYear(country, year, results => { addYearToData(year, results, data) }))
     )
   ).then(() => {
     return data
@@ -41,18 +41,28 @@ function getPopulationByCountryFromXUntilY(country, startString, endString) {
   }
 }
 
-function getWorldPopulationRecordUpTo(year) {
-  return getPopulationByCountryFromXUntilY('World', 1950, year)
+function getWorldPopulationRecordUntil(year) {
+  return getTotalByCountryFromXUntilY('World', 1950, year)
 }
 
-// getWorldPopulationRecordUpTo(2000)
+function getTotalByCountryFromXUntilY(country, startString, endString) {
+  return getDetailedByCountryFromXUntilY(country, startString, endString)
+    .then(data => {
+      return Object.keys(data).map(year => {
+        return data[year].reduce((total, next) => total + Number(next.total), 0)
+      })
+    })
+}
+
+// getWorldPopulationRecordUntil(2000)
 //   .then(results => {
-//     console.log(`There are ${Object.keys(results).length} years in the result object`);
+//     console.log(results);
 //   })
 
 
 module.exports = {
-  getPopulationByCountryInYear,
-  getWorldPopulationRecordUpTo,
-  getPopulationByCountryFromXUntilY
+  getDetailedByCountryInYear,
+  getWorldPopulationRecordUntil,
+  getDetailedByCountryFromXUntilY,
+  getTotalByCountryFromXUntilY
 }
