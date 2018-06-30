@@ -17,10 +17,9 @@ class PopulationGraph extends Component {
     }
 
     animateChart() {
-      console.log('connecting faux dom');
       const faux = this.props.connectFauxDOM('svg', 'chart')
 
-      var margin = { top: 20, right: 20, bottom: 30, left: 80 };
+      const margin = { top: 20, right: 20, bottom: 30, left: 80 };
 
       const svgSize = [800, 600]
       const size = [svgSize[0] - margin.left - margin.right, svgSize[1] - margin.top - margin.bottom]
@@ -35,20 +34,18 @@ class PopulationGraph extends Component {
       const g = svg.append('g')
         .attr('transform', `translate(${margin.left},${margin.top})`)
 
-      const xScale = d3.scaleTime().rangeRound([0, size[0]])
+      const xScale = d3.scaleTime()
+          .rangeRound([0, size[0]])
+          .domain(d3.extent(data, d => d.year))
 
-      const yScale = d3.scaleLinear().rangeRound([size[1], 0])
+      const yScale = d3.scaleLinear()
+          .rangeRound([size[1], 0])
+          .domain(d3.extent(data, d => d.population))
 
       const line = d3.line()
         .curve(d3.curveMonotoneX)
-        // .interpolate('cardinal')
         .x(d => xScale(d.year))
         .y(d => yScale(d.population))
-
-      xScale.domain(d3.extent(data, d => d.year))
-      yScale.domain(d3.extent(data, d => d.population))
-
-      console.log(d3.extent(data, d => d.year));
 
       g.append('g')
         .attr('transform', `translate(0,${size[1]})`)
