@@ -20,7 +20,7 @@ class PopulationGraph extends Component {
       console.log('connecting faux dom');
       const faux = this.props.connectFauxDOM('svg', 'chart')
 
-      var margin = { top: 20, right: 20, bottom: 30, left: 50 };
+      var margin = { top: 20, right: 20, bottom: 30, left: 80 };
 
       const svgSize = [800, 600]
       const size = [svgSize[0] - margin.left - margin.right, svgSize[1] - margin.top - margin.bottom]
@@ -30,9 +30,7 @@ class PopulationGraph extends Component {
         .attr('height', svgSize[1])
 
       const data = this.props.data
-      data.map(e => {e.year = new Date(e.year, 1)})
-
-      console.log(`getting data`, data);
+            data.map(e => {e.year = new Date(e.year, 1)})
 
       const g = svg.append('g')
         .attr('transform', `translate(${margin.left},${margin.top})`)
@@ -55,8 +53,8 @@ class PopulationGraph extends Component {
       g.append('g')
         .attr('transform', `translate(0,${size[1]})`)
         .call(d3.axisBottom(xScale))
-        .select('.domain')
-        .remove();
+        // .select('.domain')
+        // .remove();
 
       g.append('g')
         .call(d3.axisLeft(yScale))
