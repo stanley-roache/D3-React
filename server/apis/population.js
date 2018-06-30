@@ -49,11 +49,11 @@ function getWorldPopulationRecordUntil(year) {
 function getTotalByCountryFromXUntilY(country, startString, endString) {
   return getDetailedByCountryFromXUntilY(country, startString, endString)
     .then(data => {
-      const listOfTotals = Object.keys(data).reduce((iter, year) => {
-        const yearlyTotal = data[year].reduce((total, next) => total + Number(next.total), 0)
-        iter[year] = yearlyTotal
-        return iter
-      }, {})
+      const listOfTotals = Object.keys(data).map(e => Number(e)).sort((a,b) => a - b)
+        .map(year => {
+          const yearlyTotal = data[year].reduce((total, next) => total + Number(next.total), 0)
+          return { year, population: yearlyTotal }
+        })
       return listOfTotals
     })
 }
