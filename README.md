@@ -36,3 +36,7 @@ This looks awesome and I think using it would help to understand rendering deepe
   - <a href="https://www.esrl.noaa.gov/gmd/ccgg/trends/gl_full.html">Global CO2</a>
 - <a href="http://sedac.ciesin.columbia.edu/theme/land-use/data/sets/browse">Interesting Land use Data</a>
 - <a href="https://github.com/geotiffjs/geotiff.js">GeoTiff parser</a>
+
+- <a href="http://bl.ocks.org/KoGor/5994804">Globe Country Selector</a>
+- <a href="http://bl.ocks.org/duopixel/4063326">D3 animating paths</a>
+- <a href="https://medium.freecodecamp.org/learn-to-create-a-line-chart-using-d3-js-4f43f1ee716b">D3 line graph tutorial</a>
