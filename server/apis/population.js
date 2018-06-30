@@ -23,16 +23,18 @@ function getDetailedByCountryFromXUntilY(country, startString, endString) {
   if (end <= start) throw new Error('bad request, end before start');
   if (end > 2100 || start < 1950) throw new Error('outside year range')
 
-  const years = Array(end - start).fill(0)
-                                  .map((el, i) => start + i)
+  const years = Array(end - start)
+    .fill(0)
+    .map((el, i) => start + i)
 
   const data = {}
 
   return Promise.all(
     years.map(year => (
-      getDetailedByCountryInYear(country, year, results => { addYearToData(year, results, data) }))
+      getDetailedByCountryInYear(country, year, results => { git addYearToData(year, results, data) }))
     )
-  ).then(() => {
+  )
+  .then(() => {
     console.log('promise all resolving');
     return data
   })
