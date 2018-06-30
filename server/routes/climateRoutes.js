@@ -3,7 +3,7 @@ const router = require('express').Router()
 
 const climate = require('../apis/climate')
 
-router.get('/climate/getData', (req, res) => {
+router.get('/getData', (req, res) => {
   console.log(`Router active, seeking data`);
   const {start, end, country, metric, type} = req.query
   climate.getData(type, metric, start, end, country)
