@@ -31,7 +31,7 @@ function getDetailedByCountryFromXUntilY(country, startString, endString) {
 
   return Promise.all(
     years.map(year => (
-      getDetailedByCountryInYear(country, year, results => { git addYearToData(year, results, data) }))
+      getDetailedByCountryInYear(country, year, results => { addYearToData(year, results, data) }))
     )
   )
   .then(() => {
