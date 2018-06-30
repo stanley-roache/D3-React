@@ -4,7 +4,7 @@ const bodyParser = require('body-parser')
 const cors = require('cors')
 
 const server = express()
-const climateRouter = require('./routes/routes')
+const climateRouter = require('./routes/climateRoutes')
 const populationRouter = require('./routes/populationRoutes')
 
 server.use(cors('*'))
