@@ -1,10 +1,10 @@
 const request = require('superagent')
 
-const apiURL = 'http://api.population.io:80/1.0/population'
+const apiURL = 'http://api.population.io:80/1.0'
 
 function getDetailedByCountryInYear(country, year, callback) {
   console.log(`Server side api fetching population data for ${country} in ${year}`);
-  return request.get(`${apiURL}/${year}/${country}/`)
+  return request.get(`${apiURL}/population/${year}/${country}/`)
     .set('Content-Type', 'application/json')
     .then(res => {
       console.log('succes fetching data');
@@ -24,7 +24,7 @@ function getDetailedByCountryFromXUntilY(country, startString, endString) {
   if (end > 2100 || start < 1950) throw new Error('outside year range')
 
   const years = Array(end - start).fill(0)
-                                      .map((el, i) => start + i)
+                                  .map((el, i) => start + i)
 
   const data = {}
 
@@ -33,6 +33,7 @@ function getDetailedByCountryFromXUntilY(country, startString, endString) {
       getDetailedByCountryInYear(country, year, results => { addYearToData(year, results, data) }))
     )
   ).then(() => {
+    console.log('promise all resolving');
     return data
   })
 
@@ -48,12 +49,23 @@ function getWorldPopulationRecordUntil(year) {
 function getTotalByCountryFromXUntilY(country, startString, endString) {
   return getDetailedByCountryFromXUntilY(country, startString, endString)
     .then(data => {
-      return Object.keys(data).map(year => {
-        return data[year].reduce((total, next) => total + Number(next.total), 0)
-      })
+      const listOfTotals = Object.keys(data).reduce((iter, year) => {
+        const yearlyTotal = data[year].reduce((total, next) => total + Number(next.total), 0)
+        iter[year] = yearlyTotal
+        return iter
+      }, {})
+      return listOfTotals
     })
 }
 
+function getCountryList(callback) {
+  return request.get(`${apiURL}/countries`)
+    .set('Content-Type', 'application/json')
+    .then(res => {
+      if (callback) callback(res.body)
+      return res.body
+    })
+}
 // getWorldPopulationRecordUntil(2000)
 //   .then(results => {
 //     console.log(results);
@@ -64,5 +76,6 @@ module.exports = {
   getDetailedByCountryInYear,
   getWorldPopulationRecordUntil,
   getDetailedByCountryFromXUntilY,
-  getTotalByCountryFromXUntilY
+  getTotalByCountryFromXUntilY,
+  getCountryList
 }
