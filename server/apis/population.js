@@ -3,11 +3,9 @@ const request = require('superagent')
 const apiURL = 'http://api.population.io:80/1.0'
 
 function getDetailedByCountryInYear(country, year, callback) {
-  console.log(`Server side api fetching population data for ${country} in ${year}`);
   return request.get(`${apiURL}/population/${year}/${country}/`)
     .set('Content-Type', 'application/json')
     .then(res => {
-      console.log('succes fetching data');
       if (callback) callback(res.body)
       return res.body
     })
@@ -39,8 +37,8 @@ function getDetailedByCountryFromXUntilY(country, startString, endString) {
     return data
   })
 
-  function addYearToData(year, results, data) {
-    data[year] = results
+  function addYearToData(year, results, dataSet) {
+    dataSet[year] = results
   }
 }
 
@@ -56,6 +54,7 @@ function getTotalByCountryFromXUntilY(country, startString, endString) {
           const yearlyTotal = data[year].reduce((total, next) => total + Number(next.total), 0)
           return { year, population: yearlyTotal }
         })
+      console.log(country, listOfTotals[0]);
       return listOfTotals
     })
 }

@@ -10,7 +10,7 @@ router.get('/total/:country/:start/:end/', (req, res) => {
 
   pop.getTotalByCountryFromXUntilY(country, start, end)
     .then(data => {
-      console.log(`population router Success, returning data`);
+      console.log(`population router Success, returning`, data[0]);
       res.json(data)
     })
 })

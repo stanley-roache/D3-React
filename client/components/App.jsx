@@ -1,9 +1,10 @@
 import React, {Component} from 'react'
 import {HashRouter as Router, Route} from 'react-router-dom'
 
-import {getTotalByCountryFromXUntilY} from '../apis/population'
+import {getTotalByCountryFromXUntilY, getCountryList} from '../apis/population'
 
 import DisplayTemp from './DisplayTemp'
+import SelectCountryForm from './SelectCountryForm'
 import PopulationGraph from './PopulationGraph'
 
 import {CO2} from '../../server/data/co2'
@@ -13,49 +14,53 @@ class App extends Component {
     super(props)
 
     this.state = {
-      data: []
+      data: [],
+      countryList: []
     }
   }
 
   componentDidMount() {
-    getTotalByCountryFromXUntilY('Australia', 1950, 2100)
+    console.log('fetching country list');
+    getCountryList()
+      .then(results => {
+        console.log('fetched country list', results);
+        this.setState({
+          countryList: results.countries
+        })
+      })
+
+    // getTotalByCountryFromXUntilY('Australia', 1950, 2100)
+    //   .then(data => {
+    //     console.log(data);
+    //     this.setState({data})
+    //   })
+  }
+
+  fetchGraph(selection) {
+    const {country, start, end} = selection
+    getTotalByCountryFromXUntilY(country, start, end)
       .then(data => {
-        console.log(data);
+        console.log('success fetching data', data[0]);
         this.setState({data})
       })
   }
 
-  render () {
-    // let mockData = [
-    //   {year: 1950, population: 10},
-    //   {year: 1951, population: 80},
-    //   {year: 1952, population: 120},
-    //   {year: 1953, population: 200},
-    //   {year: 1954, population: 100}
-    // ]
-    // let size = [500, 500]
-
+  render() {
+    console.log('rerender with ', this.state.data);
     return (
       <Router>
       <div className='app-container section'>
       <h1>Dashboard</h1>
-      <h2>Test Component</h2>
-      {this.state.data.length && <PopulationGraph data={this.state.data}/>}
+      {(this.state.countryList.length)
+          ? <SelectCountryForm countryList={this.state.countryList} handler={selection => this.fetchGraph(selection)}/>
+          : <p> Fetching Country List... </p>
+      }
+      {this.state.data.length
+          && <PopulationGraph data={this.state.data} />}
       </div>
       </Router>
     )
-
   }
 }
 
 export default App
-
-
-{/*
-  <AnimatableComponent />
-  <h2>plain faux render</h2>
-  <PlainFauxBarChart data={CO2} size={size} />
-  <h2>With connection to faux dom</h2>
-  <AnimatedFauxBarChart data={CO2} size={size} />
-
-  */}

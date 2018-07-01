@@ -10,51 +10,91 @@ class PopulationGraph extends Component {
       super(props)
 
       this.animateChart = this.animateChart.bind(this)
+      this.setupFauxDom = this.setupFauxDom.bind(this)
+
+      this.state = {
+        triggerChart: true,
+        faux: null,
+        handles: null
+      }
     }
 
     componentDidMount() {
-      this.animateChart()
+      this.setupFauxDom()
+    }
+
+    componentWillUpdate(nextProps) {
+      if (nextProps != this.props) this.setState({triggerChart: true})
+    }
+
+    componentDidUpdate() {
+      if (this.state.triggerChart) {
+        this.animateChart()
+        this.setState({
+          triggerChart: false
+        })
+      }
+    }
+
+    setupFauxDom() {
+      const faux = this.props.connectFauxDOM('svg', 'chart')
+
+      const svgSize = [800, 600]
+
+      const handles = {
+        svg: d3.select(faux)
+          .attr('width', svgSize[0])
+          .attr('height', svgSize[1])
+      }
+
+      handles.g = handles.svg.append('g')
+      handles.xAxis = handles.g.append('g')
+      handles.yAxis = handles.g.append('g')
+      handles.xScale = d3.scaleTime()
+      handles.yScale = d3.scaleLinear()
+      handles.line = d3.line()
+      handles.path = handles.g.append("path")
+
+      this.setState({
+        faux,
+        handles
+      })
     }
 
     animateChart() {
-      const faux = this.props.connectFauxDOM('svg', 'chart')
+      const faux = this.state.faux
+      const {svg, g, xAxis, yAxis, xScale, yScale, line, path} = this.state.handles
 
       const margin = { top: 20, right: 20, bottom: 30, left: 80 };
 
       const svgSize = [800, 600]
       const size = [svgSize[0] - margin.left - margin.right, svgSize[1] - margin.top - margin.bottom]
 
-      const svg = d3.select(faux)
-        .attr('width', svgSize[0])
+      svg.attr('width', svgSize[0])
         .attr('height', svgSize[1])
 
       const data = this.props.data
-            data.map(e => {e.year = new Date(e.year, 1)})
 
-      const g = svg.append('g')
-        .attr('transform', `translate(${margin.left},${margin.top})`)
+      data.map(e => {if (typeof e.year !== 'object') e.year = new Date(e.year, 1)})
 
-      const xScale = d3.scaleTime()
-          .rangeRound([0, size[0]])
-          .domain(d3.extent(data, d => d.year))
+      g.attr('transform', `translate(${margin.left},${margin.top})`)
 
-      const yScale = d3.scaleLinear()
-          .rangeRound([size[1], 0])
-          .domain(d3.extent(data, d => d.population))
+      xScale.rangeRound([0, size[0]])
+            .domain(d3.extent(data, d => d.year))
 
-      const line = d3.line()
-        .curve(d3.curveMonotoneX)
+      yScale.rangeRound([size[1], 0])
+            .domain(d3.extent(data, d => d.population))
+
+      line.curve(d3.curveMonotoneX)
         .x(d => xScale(d.year))
         .y(d => yScale(d.population))
 
-      g.append('g')
-        .attr('transform', `translate(0,${size[1]})`)
+      xAxis.attr('transform', `translate(0,${size[1]})`)
         .call(d3.axisBottom(xScale))
         // .select('.domain')
         // .remove();
 
-      g.append('g')
-        .call(d3.axisLeft(yScale))
+      yAxis.call(d3.axisLeft(yScale))
         .append('text')
         .attr('fill', '#000')
         .attr("transform", "rotate(-90)")
@@ -63,8 +103,7 @@ class PopulationGraph extends Component {
        .attr("text-anchor", "end")
        .text("Population");
 
-       g.append("path")
-        .datum(data)
+      path.datum(data)
         .attr('fill', 'none')
         .attr('stroke', 'steelblue')
         .attr("stroke-linejoin", "round")
@@ -74,10 +113,10 @@ class PopulationGraph extends Component {
 
 
       this.props.animateFauxDOM(20)
-
     }
 
     render() {
+      console.log('graph rendering');
       return (
         <div className="container">
           {this.props.chart}
