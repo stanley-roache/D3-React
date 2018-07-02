@@ -89,19 +89,25 @@ class PopulationGraph extends Component {
         .x(d => xScale(d.year))
         .y(d => yScale(d.population))
 
+      // add xAxis and labels
       xAxis.attr('transform', `translate(0,${size[1]})`)
         .call(d3.axisBottom(xScale))
         // .select('.domain')
         // .remove();
 
+      // add yAxis and labels
       yAxis.call(d3.axisLeft(yScale))
-        .append('text')
-        .attr('fill', '#000')
-        .attr("transform", "rotate(-90)")
-       .attr("y", 6)
-       .attr("dy", "0.71em")
-       .attr("text-anchor", "end")
-       .text("Population");
+
+      // const yLabel = fleshedYAxis.selectAll('text')
+      //   .data([1])
+      //   .enter().append('text')
+
+      // yLabel.attr('fill', '#000')
+      //   .attr("transform", "rotate(-90)")
+      //  .attr("y", 6)
+      //  .attr("dy", "0.71em")
+      //  .attr("text-anchor", "end")
+      //  .text("Population");
 
       path.datum(data)
         .attr('fill', 'none')

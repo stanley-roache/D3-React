@@ -23,17 +23,11 @@ class App extends Component {
     console.log('fetching country list');
     getCountryList()
       .then(results => {
-        console.log('fetched country list', results);
+        console.log('fetched country list', results[0]);
         this.setState({
           countryList: results.countries
         })
       })
-
-    // getTotalByCountryFromXUntilY('Australia', 1950, 2100)
-    //   .then(data => {
-    //     console.log(data);
-    //     this.setState({data})
-    //   })
   }
 
   fetchGraph(selection) {

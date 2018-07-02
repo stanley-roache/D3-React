@@ -49,7 +49,6 @@ function getWorldPopulationRecordUntil(year) {
 function getTotalByCountryFromXUntilY(country, startString, endString) {
   return getDetailedByCountryFromXUntilY(country, startString, endString)
     .then(rawData => {
-      console.log(rawData);
       const listOfTotals = Object.keys(rawData).map(e => Number(e)).sort((a,b) => a - b)
         .map(year => {
           const yearlyTotal = rawData[year].reduce((total, next) => total + Number(next.total), 0)
