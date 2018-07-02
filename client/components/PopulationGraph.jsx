@@ -83,7 +83,8 @@ class PopulationGraph extends Component {
             .domain(d3.extent(data, d => d.year))
 
       yScale.rangeRound([size[1], 0])
-            .domain(d3.extent(data, d => d.population))
+            // .domain(d3.extent(data, d => d.population))
+            .domain([0, max(data.map(d => d.population))])
 
       line.curve(d3.curveMonotoneX)
         .x(d => xScale(d.year))

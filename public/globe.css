@@ -17,7 +17,7 @@
     fill: #33CC33;
 }
 
-select.globeSelect {
+select.globe-select {
     position: absolute;
     top: 20px;
     left: 580px;
