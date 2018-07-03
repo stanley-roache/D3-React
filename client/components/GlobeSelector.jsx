@@ -7,7 +7,7 @@ import fetch from 'd3-fetch'
 console.log(d3.tsv);
 
 
-import topojson from 'topojson-client'
+const topojson = require('topojson')
 
 class GlobeSelector extends Component {
     constructor(props) {
@@ -20,6 +20,7 @@ class GlobeSelector extends Component {
 
     createGlobe() {
         const faux = this.props.connectFauxDOM('div', 'globeContainer')
+        const props = this.props
 
         let width = 600,
             height = 500,
@@ -43,8 +44,6 @@ class GlobeSelector extends Component {
             .datum({type: 'Sphere'})
             .attr('class', 'water')
             .attr('d', path)
-
-        this.props.animateFauxDOM(10)
 
         let countryToolTip = d3.select(faux).append('div')
             .attr('class', 'countryToolTip')
@@ -75,22 +74,27 @@ class GlobeSelector extends Component {
             console.log({topojson});
             
 
-            countries = topojson.feature(world, world.objects.countries).features
+            let countries = topojson.feature(world, world.objects.countries).features
+
+            console.log({countries});
+            
 
             // pushing countries into droplist
             countryData.forEach(d => {
                 countryById[d.id] = d.name 
-                option = countryList.append('option')
-                option.text(d.name)
-                option.property('value', d.id)
+                countryList.append('option')
+                        .text(d.name)
+                        .property('value', d.id)
             })
 
-            // // drawing countries on globe
-            // let countryOutlines = svg.selectAll('path.land')
-            //     .data(countries)
-            //     .enter().append('path')
-            //     .attr('class', 'land')
-            //     .attr('d', path)
+            // drawing countries on globe
+            let countryOutlines = svg.selectAll('path.land')
+                .data(countries)
+                .enter().append('path')
+                .attr('class', 'land')
+                .attr('d', path)
+
+            props.animateFauxDOM(1000)
         }
     }
 
