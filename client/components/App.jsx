@@ -53,15 +53,15 @@ class App extends Component {
   render() {
     return (
       <div className='app-container section'>
-      <GlobeSelector />
-      {(this.props.data.length == 0)
-        ? <h1>No data to show</h1>
-        : <PopulationGraph />}
       <DisplayTemp />
       </div>
     )
   }
 }
+{/* <GlobeSelector />
+{(this.props.data.length == 0)
+  ? <h1>No data to show</h1>
+  : <PopulationGraph />} */}
 
 function mapStateToProps({country, data}) {
   return {
