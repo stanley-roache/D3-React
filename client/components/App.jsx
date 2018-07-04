@@ -19,7 +19,6 @@ class App extends Component {
     super(props)
 
     this.state = {
-      data: [],
       countryList: []
     }
   }
@@ -48,7 +47,6 @@ class App extends Component {
     getTotalByCountryFromXUntilY(country, start, end)
       .then(data => {
         console.log('success fetching data', data[0]);
-        this.setState({data})
         this.props.dispatch(updateDataAction(data))
       })
   }
@@ -57,17 +55,18 @@ class App extends Component {
     return (
       <div className='app-container section'>
       <GlobeSelector />
-      {this.props.data.length
-          && <PopulationGraph />}
+      {(this.props.data.length == 0)
+        ? <h1>No data to show</h1>
+        : <PopulationGraph />}
       </div>
     )
   }
 }
 
-function mapStateToProps(state) {
+function mapStateToProps({country, data}) {
   return {
-    country: state.country,
-    data: state.data
+    country,
+    data
   }
 }
 
