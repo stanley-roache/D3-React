@@ -3,10 +3,9 @@ import {HashRouter as Router, Route} from 'react-router-dom'
 
 import {getTotalByCountryFromXUntilY, getCountryList} from '../apis/population'
 
-import DisplayTemp from './DisplayTemp'
-import SelectCountryForm from './SelectCountryForm'
 import PopulationGraph from './PopulationGraph'
 import GlobeSelector from './GlobeSelector'
+import DisplayTemp from './DisplayTemp'
 
 import {CO2} from '../../server/data/co2'
 
@@ -58,6 +57,7 @@ class App extends Component {
       {(this.props.data.length == 0)
         ? <h1>No data to show</h1>
         : <PopulationGraph />}
+      <DisplayTemp />
       </div>
     )
   }

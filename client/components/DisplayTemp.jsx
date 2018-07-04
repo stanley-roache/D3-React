@@ -51,7 +51,7 @@ class DisplayTemp extends Component {
 
     const yScale = scaleLinear()
        .domain(yDomain)
-       .range([20, size[1]- 20])
+       .range([50, size[1]- 50])
 
      const xScale = scaleLinear()
         .domain(xDomain)
@@ -71,16 +71,16 @@ class DisplayTemp extends Component {
       .data(pureData)
 
     circles.style('fill', 'red')
-      .attr('cx', (d,i) => 50 + xScale(i + 1980))
-      .attr('cy', d => 50 + size[1] - yScale(d))
+      .attr('cx', (d,i) => xScale(i + 1980))
+      .attr('cy', d => size[1] - yScale(d))
       .attr('r', 0)
 
     circles.transition()
-      .delay((d,i) => i*50)
-      .duration(100)
+      .delay((d,i) => i*100)
+      .duration(200)
       .attr('r', d => 10 + d)
 
-    this.props.animateFauxDOM(1000)
+    this.props.animateFauxDOM(5000)
   }
 
   grabData() {
