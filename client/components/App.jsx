@@ -51,29 +51,23 @@ class App extends Component {
         this.setState({data})
         this.props.dispatch(updateDataAction(data))
       })
-    }
+  }
     
-    render() {
-      return (
-        <Router>
-        <div className='app-container section'>
-          <h1>Dashboard</h1>
-        <GlobeSelector />
-        {(this.state.countryList.length)
-            ? <SelectCountryForm countryList={this.state.countryList} handler={selection => this.fetchGraph(selection)}/>
-            : <p> Fetching Country List... </p>
-          }
-        {this.state.data.length
-            && <PopulationGraph />}
-        </div>
-      </Router>
+  render() {
+    return (
+      <div className='app-container section'>
+      <GlobeSelector />
+      {this.props.data.length
+          && <PopulationGraph />}
+      </div>
     )
   }
 }
 
 function mapStateToProps(state) {
   return {
-    country: state.country
+    country: state.country,
+    data: state.data
   }
 }
 

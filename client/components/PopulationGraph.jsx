@@ -120,6 +120,7 @@ class PopulationGraph extends Component {
       console.log('graph rendering');
       return (
         <div className="container">
+        <h1>Population</h1>
           {this.props.chart}
         </div>
       )
