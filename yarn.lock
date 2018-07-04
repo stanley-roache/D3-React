@@ -6000,7 +6000,7 @@ react-faux-dom@^4.2.0:
     query-selector "^1.0.9"
     style-attr "^1.0.1"
 
-react-redux@^5.0.5:
+react-redux@^5.0.7:
   version "5.0.7"
   resolved "https://registry.yarnpkg.com/react-redux/-/react-redux-5.0.7.tgz#0dc1076d9afb4670f993ffaef44b8f8c1155a4c8"
   dependencies:

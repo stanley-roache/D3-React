@@ -5,6 +5,8 @@ import * as d3 from 'd3'
 import { max, min } from 'd3-array'
 import { scaleLinear } from 'd3-scale'
 
+import {connect} from 'react-redux'
+
 class PopulationGraph extends Component {
     constructor(props) {
       super(props)
@@ -13,7 +15,6 @@ class PopulationGraph extends Component {
       this.setupFauxDom = this.setupFauxDom.bind(this)
 
       this.state = {
-        triggerChart: true,
         faux: null,
         handles: null
       }
@@ -23,16 +24,9 @@ class PopulationGraph extends Component {
       this.setupFauxDom()
     }
 
-    componentWillUpdate(nextProps) {
-      if (nextProps != this.props) this.setState({triggerChart: true})
-    }
-
-    componentDidUpdate() {
-      if (this.state.triggerChart) {
+    componentDidUpdate(prevProps) {
+      if (prevProps.data != this.props.data) {
         this.animateChart()
-        this.setState({
-          triggerChart: false
-        })
       }
     }
 
@@ -62,7 +56,7 @@ class PopulationGraph extends Component {
     }
 
     animateChart() {
-      const faux = this.state.faux
+      const faux = this.props.faux
       const {svg, g, xAxis, yAxis, xScale, yScale, line, path} = this.state.handles
 
       const margin = { top: 20, right: 20, bottom: 30, left: 80 };
@@ -119,7 +113,7 @@ class PopulationGraph extends Component {
         .attr("d", line);
 
 
-      this.props.animateFauxDOM(20)
+      this.props.drawFauxDOM()
     }
 
     render() {
@@ -132,4 +126,10 @@ class PopulationGraph extends Component {
     }
 }
 
-export default withFauxDOM(PopulationGraph)
+function mapStateToProps({data}) {
+  return {
+    data
+  }
+}
+
+export default connect(mapStateToProps)(withFauxDOM(PopulationGraph))

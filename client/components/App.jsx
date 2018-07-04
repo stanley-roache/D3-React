@@ -10,6 +10,10 @@ import GlobeSelector from './GlobeSelector'
 
 import {CO2} from '../../server/data/co2'
 
+import {connect} from 'react-redux'
+
+import {updateDataAction} from '../actions/data'
+
 class App extends Component {
   constructor(props) {
     super(props)
@@ -31,32 +35,46 @@ class App extends Component {
       })
   }
 
+  componentDidUpdate(prevProps, prevState) {
+    if (prevProps.country != this.props.country) this.fetchGraph({
+      country: this.props.country, 
+      start: 1950, 
+      end: 2018
+    })
+  }
+
   fetchGraph(selection) {
     const {country, start, end} = selection
     getTotalByCountryFromXUntilY(country, start, end)
       .then(data => {
         console.log('success fetching data', data[0]);
         this.setState({data})
+        this.props.dispatch(updateDataAction(data))
       })
     }
     
     render() {
-      console.log('rerender with ', this.state.data);
       return (
         <Router>
         <div className='app-container section'>
           <h1>Dashboard</h1>
+        <GlobeSelector />
         {(this.state.countryList.length)
             ? <SelectCountryForm countryList={this.state.countryList} handler={selection => this.fetchGraph(selection)}/>
             : <p> Fetching Country List... </p>
           }
         {this.state.data.length
-            && <PopulationGraph data={this.state.data} />}
-        <GlobeSelector />
+            && <PopulationGraph />}
         </div>
       </Router>
     )
   }
 }
 
-export default App
+function mapStateToProps(state) {
+  return {
+    country: state.country
+  }
+}
+
+export default connect(mapStateToProps)(App)

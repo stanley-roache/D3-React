@@ -4,6 +4,10 @@ import {withFauxDOM} from 'react-faux-dom'
 
 import fetch from 'd3-fetch'
 
+import {connect} from 'react-redux'
+
+import {selectCountryAction} from '../actions/country'
+
 console.log(d3.tsv);
 
 
@@ -66,18 +70,9 @@ class GlobeSelector extends Component {
             })
 
         function ready(worldJson, countryData, country) {
-            console.log({worldJson, countryData});
-            
-            
-            let countryById = {}
-
-            console.log({topojson});
-            
-
             let countries = topojson.feature(worldJson, worldJson.objects.countries).features
 
-            console.log({countries});
-            
+            const countryById = {}
 
             // pushing countries into droplist
             countryData.forEach(d => {
@@ -87,8 +82,6 @@ class GlobeSelector extends Component {
                         .property('value', d.id)
             })
 
-            console.log({countries});
-            
             // drawing countries on globe
             let world = svg.selectAll('path.land')
                 .data(countries)
@@ -118,6 +111,9 @@ class GlobeSelector extends Component {
 
             d3.select(faux).select("select").on("change", function (e) {
                 const selectedName = d3.select(faux).select('.globe-select').node().component.value
+
+                props.dispatch(selectCountryAction(selectedName))
+
                 const selectedId = countryData.find(e => e.name == selectedName).id
 
                 
@@ -125,15 +121,10 @@ class GlobeSelector extends Component {
                     focusedCountry = countries.find(e => Number(e.id) === Number(selectedId)),
                     p = d3.geoCentroid(focusedCountry);
 
-                console.log('focused country', focusedCountry);
-                
-            
                 svg.selectAll(".focused").classed("focused", focused = false);
         
                 //Globe rotating
-        
-                // (function transition() {
-                    d3.transition()
+                d3.transition()
                     .duration(2500)
                     .tween("rotate", function() {
                         let r = d3.interpolate(projection.rotate(), [-p[0], -p[1]]);
@@ -146,11 +137,8 @@ class GlobeSelector extends Component {
                                 });
                         };
                     })
-                    props.animateFauxDOM(2700)
-                // })();
+                props.animateFauxDOM(2700)
             });
-
-            
 
             props.drawFauxDOM()
         }
@@ -165,4 +153,4 @@ class GlobeSelector extends Component {
     }
 } 
 
-export default withFauxDOM(GlobeSelector)
+export default connect()(withFauxDOM(GlobeSelector))
