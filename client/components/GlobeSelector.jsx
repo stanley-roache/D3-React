@@ -29,7 +29,7 @@ class GlobeSelector extends Component {
 
         let projection = d3.geoOrthographic()
             .scale(245)
-            .rotate([0, 0])
+            .rotate([45, 0])
             .translate([width/2, height/2])
             .clipAngle(90)
 
@@ -65,8 +65,8 @@ class GlobeSelector extends Component {
                 throw err
             })
 
-        function ready(world, countryData) {
-            console.log({world, countryData});
+        function ready(worldJson, countryData, country) {
+            console.log({worldJson, countryData});
             
             
             let countryById = {}
@@ -74,7 +74,7 @@ class GlobeSelector extends Component {
             console.log({topojson});
             
 
-            let countries = topojson.feature(world, world.objects.countries).features
+            let countries = topojson.feature(worldJson, worldJson.objects.countries).features
 
             console.log({countries});
             
@@ -87,14 +87,72 @@ class GlobeSelector extends Component {
                         .property('value', d.id)
             })
 
+            console.log({countries});
+            
             // drawing countries on globe
-            let countryOutlines = svg.selectAll('path.land')
+            let world = svg.selectAll('path.land')
                 .data(countries)
                 .enter().append('path')
                 .attr('class', 'land')
                 .attr('d', path)
 
-            props.animateFauxDOM(1000)
+            // hover on country info
+            world.on("mouseover", d => {
+                countryToolTip.text(countryById[d.id])
+                .style("left", (d3.event.pageX + 7) + "px")
+                .style("top", (d3.event.pageY - 15) + "px")
+                .style("display", "block")
+                .style("opacity", 1);
+                props.drawFauxDOM()
+              })
+              .on("mouseout", d => {
+                countryToolTip.style("opacity", 0)
+                .style("display", "none");
+                props.drawFauxDOM()
+              })
+              .on("mousemove", d => {
+                countryToolTip.style("left", (d3.event.pageX + 7) + "px")
+                .style("top", (d3.event.pageY - 15) + "px");
+                props.drawFauxDOM()
+              });
+
+            d3.select(faux).select("select").on("change", function (e) {
+                const selectedName = d3.select(faux).select('.globe-select').node().component.value
+                const selectedId = countryData.find(e => e.name == selectedName).id
+
+                
+                let rotate = projection.rotate(),
+                    focusedCountry = countries.find(e => Number(e.id) === Number(selectedId)),
+                    p = d3.geoCentroid(focusedCountry);
+
+                console.log('focused country', focusedCountry);
+                
+            
+                svg.selectAll(".focused").classed("focused", focused = false);
+        
+                //Globe rotating
+        
+                // (function transition() {
+                    d3.transition()
+                    .duration(2500)
+                    .tween("rotate", function() {
+                        let r = d3.interpolate(projection.rotate(), [-p[0], -p[1]]);
+                        return t => {
+                            projection.rotate(r(t));
+                            svg.selectAll("path.land")
+                                .attr("d", path)
+                                .classed("focused", (d, i) => { 
+                                    return (d.id == focusedCountry.id) ? focused = d : false; 
+                                });
+                        };
+                    })
+                    props.animateFauxDOM(2700)
+                // })();
+            });
+
+            
+
+            props.drawFauxDOM()
         }
     }
 
