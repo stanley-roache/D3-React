@@ -35,8 +35,8 @@ class App extends Component {
 
   componentDidUpdate(prevProps, prevState) {
     if (prevProps.country != this.props.country) this.fetchGraph({
-      country: this.props.country, 
-      start: 1950, 
+      country: this.props.country,
+      start: 1950,
       end: 2018
     })
   }
@@ -49,19 +49,19 @@ class App extends Component {
         this.props.dispatch(updateDataAction(data))
       })
   }
-    
+  // <DisplayTemp />
+
   render() {
     return (
       <div className='app-container section'>
-      <DisplayTemp />
+      <GlobeSelector />
+        {(this.props.data.length == 0)
+          ? <h1>No data to show</h1>
+          : <PopulationGraph />}
       </div>
     )
   }
 }
-{/* <GlobeSelector />
-{(this.props.data.length == 0)
-  ? <h1>No data to show</h1>
-  : <PopulationGraph />} */}
 
 function mapStateToProps({country, data}) {
   return {

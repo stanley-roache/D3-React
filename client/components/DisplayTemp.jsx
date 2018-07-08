@@ -13,7 +13,7 @@ class DisplayTemp extends Component {
     super(props)
 
     this.state = {
-      tempRecords: {},
+      tempRecords: [],
       triggerChart: true
     }
 
