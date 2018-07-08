@@ -117,7 +117,6 @@ class PopulationGraph extends Component {
     }
 
     render() {
-      console.log('graph rendering');
       return (
         <div className="container">
         <h1>Population</h1>
