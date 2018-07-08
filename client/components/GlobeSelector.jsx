@@ -49,6 +49,7 @@ class GlobeSelector extends Component {
     }
 
     initialiseGlobe() {
+      console.log('initialising globe');
         const falseDOM = this.props.connectFauxDOM('div', 'globeContainer')
         const props = this.props
 
@@ -95,6 +96,7 @@ class GlobeSelector extends Component {
     }
 
     readFiles() {
+      console.log('reading files');
       return Promise.all([
           d3.json('/world-110m.json'),
           d3.tsv('/world-110m-country-names.tsv')
@@ -102,6 +104,7 @@ class GlobeSelector extends Component {
     }
 
     drawCountriesAndSetListeners(worldJson, countryData) {
+      console.log('drawing countries and adding mouseover listeners');
         let countries = topojson.feature(worldJson, worldJson.objects.countries).features
 
         const countryById = {}
@@ -164,19 +167,25 @@ class GlobeSelector extends Component {
     }
 
     attachGlobeSelectListener() {
+      console.log('adding globe select listener');
       let {
         falseDOM,
         countryData,
         countries,
         projection,
-        focused
+        focused,
+        path,
+        svg,
+        countryList
       } = this.state
 
       const props = this.props
 
-      d3.select(falseDOM)
-      .select("select")
+      console.log('selector found: ', d3.select(falseDOM).select('select'));
+
+      countryList
       .on("change", e => {
+        console.log('globe listener triggered', this);
         const selectedName = d3.select(falseDOM)
                               .select('.globe-select')
                               .node().component.value
