@@ -23,10 +23,8 @@ class App extends Component {
   }
 
   componentDidMount() {
-    console.log('fetching country list');
     getCountryList()
       .then(results => {
-        console.log('fetched country list', results[0]);
         this.setState({
           countryList: results.countries
         })
