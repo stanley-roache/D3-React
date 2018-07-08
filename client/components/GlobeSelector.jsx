@@ -32,6 +32,8 @@ class GlobeSelector extends Component {
 
         this.initialiseGlobe = this.initialiseGlobe.bind(this)
         this.drawCountriesAndSetListeners = this.drawCountriesAndSetListeners.bind(this)
+        this.handleCountryChange = this.handleCountryChange.bind(this)
+        this.attachGlobeSelectListener = this.attachGlobeSelectListener.bind(this)
     }
 
     componentDidMount() {
@@ -168,60 +170,57 @@ class GlobeSelector extends Component {
 
     attachGlobeSelectListener() {
       console.log('adding globe select listener');
-      let {
-        falseDOM,
-        countryData,
-        countries,
-        projection,
-        focused,
-        path,
-        svg,
-        countryList
-      } = this.state
-
-      const props = this.props
-
-      console.log('selector found: ', d3.select(falseDOM).select('select'));
-
-      countryList
-      .on("change", e => {
-        console.log('globe listener triggered', this);
-        const selectedName = d3.select(falseDOM)
-                              .select('.globe-select')
-                              .node().component.value
-
-        props.dispatch(selectCountryAction(selectedName))
-
-        const selectedId = countryData.find(e => e.name == selectedName).id
-
-        let rotate = projection.rotate(),
-            focusedCountry = countries.find(e => Number(e.id) === Number(selectedId)),
-            p = d3.geoCentroid(focusedCountry);
-
-        svg.selectAll(".focused").classed("focused", focused = false);
-
-        //Globe rotating
-        d3.transition()
-        .duration(2500)
-        .tween("rotate", () => {
-          let r = d3.interpolate(projection.rotate(), [-p[0], -p[1]]);
-          return t => {
-            projection.rotate(r(t));
-            svg.selectAll("path.land")
-              .attr("d", path)
-              .classed("focused", (d, i) => {
-                if (d.id == focusedCountry.id) {
-                  let focused = d
-                  this.setState({focused})
-                  return true
-                } else return false;
-              });
-          };
-        })
-        props.animateFauxDOM(2700)
-      });
+      this.state.countryList.on("change", this.handleCountryChange);
     }
 
+    handleCountryChange(e) {
+      const props = this.props
+
+      const {
+        falseDOM,
+        countryData,
+        projection,
+        svg,
+        path,
+        countries
+      } = this.state
+
+      let {focused} = this.state
+
+      const selectedName = d3.select(falseDOM)
+                            .select('.globe-select')
+                            .node().component.value
+
+      props.dispatch(selectCountryAction(selectedName))
+
+      const selectedId = countryData.find(e => e.name == selectedName).id
+
+      let rotate = projection.rotate(),
+          focusedCountry = countries.find(e => Number(e.id) === Number(selectedId)),
+          p = d3.geoCentroid(focusedCountry);
+
+      svg.selectAll(".focused").classed("focused", focused = false);
+
+      //Globe rotating
+      d3.transition()
+      .duration(2500)
+      .tween("rotate", () => {
+        let r = d3.interpolate(projection.rotate(), [-p[0], -p[1]]);
+        return t => {
+          projection.rotate(r(t));
+          svg.selectAll("path.land")
+            .attr("d", path)
+            .classed("focused", (d, i) => {
+              if (d.id == focusedCountry.id) {
+                let focused = d
+                this.setState({focused})
+                return true
+              } else return false;
+            });
+        };
+      })
+      props.animateFauxDOM(2700)
+    }
 
     render() {
         return (
