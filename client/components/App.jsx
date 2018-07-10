@@ -7,6 +7,8 @@ import PopulationGraph from './PopulationGraph'
 import GlobeSelector from './GlobeSelector'
 import DisplayTemp from './DisplayTemp'
 
+import store from '../store'
+
 import {CO2} from '../../server/data/co2'
 
 import {connect} from 'react-redux'
@@ -51,12 +53,13 @@ class App extends Component {
 
   render() {
     return (
-      <div className='app-container section'>
-      <GlobeSelector />
-        {(this.props.data.length == 0)
-          ? <h1>No data to show</h1>
-          : <PopulationGraph />}
-      </div>
+        <div className='app-container section'>
+          <GlobeSelector />
+          {(this.props.data.length == 0)
+            ? <h1>No data to show</h1>
+            : <PopulationGraph />}
+        </div>
+
     )
   }
 }
