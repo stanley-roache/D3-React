@@ -29,21 +29,19 @@ class GlobeSelector extends Component {
         this.initialiseGlobe = this.initialiseGlobe.bind(this)
         this.drawCountriesAndSetListeners = this.drawCountriesAndSetListeners.bind(this)
         this.handleCountryChange = this.handleCountryChange.bind(this)
-        this.attachGlobeSelectListener = this.attachGlobeSelectListener.bind(this)
     }
 
     componentDidMount() {
         this.initialiseGlobe()
           .then(() => this.readFiles())
-          .then(([world, countries]) => {
-            return this.drawCountriesAndSetListeners(world, countries)
-          })
-          .then(() => {
-            this.attachGlobeSelectListener()
-          })
+          .then(world => this.drawCountriesAndSetListeners(world))
           .catch(err => {
             throw err
           })
+    }
+
+    componentDidUpdate(prevProps) {
+      if (prevProps.country !== this.props.country) this.handleCountryChange(this.props.country)
     }
 
     initialiseGlobe() {
@@ -75,37 +73,37 @@ class GlobeSelector extends Component {
       let countryToolTip = d3.select(falseDOM).append('div')
           .attr('class', 'countryToolTip')
 
-      let countryList = d3.select(falseDOM).append('select')
-          .attr('class', 'globe-select')
-          .attr('name', 'countries')
+      // let countryList = d3.select(falseDOM).append('select')
+      //     .attr('class', 'globe-select')
+      //     .attr('name', 'countries')
 
       return new Promise((resolve, reject) => {
         this.setState({
+          // countryList,
           falseDOM,
           projection,
           path,
           svg,
-          countryToolTip,
-          countryList
+          countryToolTip
         },
         resolve)
       })
     }
 
     readFiles() {
-      return Promise.all([
-        d3.json('/world-110m.json'),
-        d3.tsv('/world-110m-country-names.tsv')
-      ])
+      return d3.json('/world-110m.json')
     }
 
-    drawCountriesAndSetListeners(worldJson, countryData) {
+    drawCountriesAndSetListeners(worldJson) {
+      const {countryData} = this.props
+      console.log(this.props);
       let countries = topojson.feature(worldJson, worldJson.objects.countries).features
 
       const countryById = {}
+      const {handleCountryChange} = this
 
       const {
-        countryList,
+        // countryList,
         countryToolTip,
         path,
         svg
@@ -116,9 +114,6 @@ class GlobeSelector extends Component {
       // pushing countries into droplist
       countryData.forEach(d => {
           countryById[d.id] = d.name
-          countryList.append('option')
-                  .text(d.name)
-                  .property('value', d.id)
       })
 
       // drawing countries on globe
@@ -149,7 +144,7 @@ class GlobeSelector extends Component {
           props.drawFauxDOM()
         })
         .on("click", d => {
-          console.log(d);
+          handleCountryChange(countryById[Number(d.id)])
         });
 
       props.drawFauxDOM()
@@ -164,11 +159,7 @@ class GlobeSelector extends Component {
       })
     }
 
-    attachGlobeSelectListener() {
-      this.state.countryList.on("change", this.handleCountryChange);
-    }
-
-    handleCountryChange(e) {
+    handleCountryChange(name) {
       const props = this.props
 
       const {
@@ -182,13 +173,9 @@ class GlobeSelector extends Component {
 
       let {focused} = this.state
 
-      const selectedName = d3.select(falseDOM)
-                            .select('.globe-select')
-                            .node().component.value
+      props.dispatch(selectCountryAction(name))
 
-      props.dispatch(selectCountryAction(selectedName))
-
-      const selectedId = countryData.find(e => e.name == selectedName).id
+      const selectedId = countryData.find(e => e.name == name).id
 
       let rotate = projection.rotate(),
           focusedCountry = countries.find(e => Number(e.id) === Number(selectedId)),
@@ -226,4 +213,9 @@ class GlobeSelector extends Component {
     }
 }
 
-export default connect()(withFauxDOM(GlobeSelector))
+const mapStateToProps = state => ({
+  country: state.country,
+  countryData: state.countryList
+})
+
+export default connect(mapStateToProps)(withFauxDOM(GlobeSelector))

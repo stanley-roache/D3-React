@@ -6,31 +6,22 @@ import {getTotalByCountryFromXUntilY, getCountryList} from '../apis/population'
 import PopulationGraph from './PopulationGraph'
 import GlobeSelector from './GlobeSelector'
 import DisplayTemp from './DisplayTemp'
+import CountrySelect from './CountrySelect'
 
 import store from '../store'
-
-import {CO2} from '../../server/data/co2'
 
 import {connect} from 'react-redux'
 
 import {fetchGraph} from '../actions/data'
+import {fetchJSONCountryList} from '../actions/countryList'
 
 class App extends Component {
   constructor(props) {
     super(props)
-
-    this.state = {
-      countryList: []
-    }
   }
 
   componentDidMount() {
-    getCountryList()
-      .then(results => {
-        this.setState({
-          countryList: results.countries
-        })
-      })
+    this.props.dispatch(fetchJSONCountryList())
   }
 
   componentDidUpdate(prevProps, prevState) {
@@ -43,20 +34,13 @@ class App extends Component {
     )
   }
 
-  // fetchGraph(selection) {
-  //   const {country, start, end} = selection
-  //   getTotalByCountryFromXUntilY(country, start, end)
-  //     .then(data => {
-  //       console.log('success fetching data', data[0]);
-  //       this.props.dispatch(updateDataAction(data))
-  //     })
-  // }
-  // <DisplayTemp />
-
   render() {
     return (
         <div className='app-container section'>
-          <GlobeSelector />
+          {this.props.fetchStatus.countries === 'received' &&
+            <CountrySelect />}
+          {this.props.fetchStatus.countries === 'received' &&
+            <GlobeSelector />}
           {(this.props.data.length == 0)
             ? <h1>No data to show</h1>
             : <PopulationGraph />}
@@ -66,11 +50,6 @@ class App extends Component {
   }
 }
 
-function mapStateToProps({country, data}) {
-  return {
-    country,
-    data
-  }
-}
+const mapStateToProps = state => state
 
 export default connect(mapStateToProps)(App)
