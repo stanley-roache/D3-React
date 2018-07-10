@@ -3,78 +3,53 @@ import {HashRouter as Router, Route} from 'react-router-dom'
 
 import {getTotalByCountryFromXUntilY, getCountryList} from '../apis/population'
 
-import DisplayTemp from './DisplayTemp'
-import SelectCountryForm from './SelectCountryForm'
 import PopulationGraph from './PopulationGraph'
 import GlobeSelector from './GlobeSelector'
+import DisplayTemp from './DisplayTemp'
+import CountrySelect from './CountrySelect'
 
-import {CO2} from '../../server/data/co2'
+import store from '../store'
 
 import {connect} from 'react-redux'
 
-import {updateDataAction} from '../actions/data'
+import {fetchGraph} from '../actions/data'
+import {fetchJSONCountryList} from '../actions/countryList'
 
 class App extends Component {
   constructor(props) {
     super(props)
-
-    this.state = {
-      data: [],
-      countryList: []
-    }
   }
 
   componentDidMount() {
-    console.log('fetching country list');
-    getCountryList()
-      .then(results => {
-        console.log('fetched country list', results[0]);
-        this.setState({
-          countryList: results.countries
-        })
-      })
+    this.props.dispatch(fetchJSONCountryList())
   }
 
   componentDidUpdate(prevProps, prevState) {
-    if (prevProps.country != this.props.country) this.fetchGraph({
-      country: this.props.country, 
-      start: 1950, 
-      end: 2018
-    })
+    if (prevProps.country != this.props.country) this.props.dispatch(
+      fetchGraph({
+        country: this.props.country,
+        start: 1950,
+        end: 2018
+      })
+    )
   }
 
-  fetchGraph(selection) {
-    const {country, start, end} = selection
-    getTotalByCountryFromXUntilY(country, start, end)
-      .then(data => {
-        console.log('success fetching data', data[0]);
-        this.setState({data})
-        this.props.dispatch(updateDataAction(data))
-      })
-    }
-    
-    render() {
-      return (
-        <Router>
+  render() {
+    return (
         <div className='app-container section'>
-          <h1>Dashboard</h1>
-        <GlobeSelector />
-        {(this.state.countryList.length)
-            ? <SelectCountryForm countryList={this.state.countryList} handler={selection => this.fetchGraph(selection)}/>
-            : <p> Fetching Country List... </p>
-          }
-        {this.state.data.length
-            && <PopulationGraph />}
+          {this.props.fetchStatus.countries === 'received' &&
+            <CountrySelect />}
+          {this.props.fetchStatus.countries === 'received' &&
+            <GlobeSelector />}
+          {(this.props.data.length == 0)
+            ? <h1>No data to show</h1>
+            : <PopulationGraph />}
         </div>
-      </Router>
+
     )
   }
 }
 
-function mapStateToProps(state) {
-  return {
-    country: state.country
-  }
-}
+const mapStateToProps = state => state
 
 export default connect(mapStateToProps)(App)

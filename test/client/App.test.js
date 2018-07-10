@@ -1,10 +1,23 @@
 import React from 'react'
-import { shallow, mount } from 'enzyme'
+import { shallow, mount, render } from 'enzyme'
+
+import {Provider} from 'react-redux'
+
+import store from '../../client/store'
 
 import App from '../../client/components/App'
 import './setup-dom'
 
-test('Hello World renders on App', () => {
-  const wrapper = shallow(<App />)
-  expect(wrapper.find('h1').text()).toBe('Hello World')
+describe('App', () => {
+  const wrapper = shallow(
+    <Provider store={store}>
+      <App />
+    </Provider>
+  );
+  it('should be defined', () => {
+    expect(wrapper).toBeDefined()
+  });
+  it('should have a GlobeSelector child', () => {
+    expect(wrapper.find('GlobeSelector')).toBeTruthy()
+  })
 })
