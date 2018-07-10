@@ -20,7 +20,6 @@ class GlobeSelector extends Component {
           path: null,
           svg: null,
           countryToolTip: null,
-          countryList: null,
           countryData: null,
           countries: null,
           world: null
@@ -73,13 +72,8 @@ class GlobeSelector extends Component {
       let countryToolTip = d3.select(falseDOM).append('div')
           .attr('class', 'countryToolTip')
 
-      // let countryList = d3.select(falseDOM).append('select')
-      //     .attr('class', 'globe-select')
-      //     .attr('name', 'countries')
-
       return new Promise((resolve, reject) => {
         this.setState({
-          // countryList,
           falseDOM,
           projection,
           path,
@@ -103,7 +97,6 @@ class GlobeSelector extends Component {
       const {handleCountryChange} = this
 
       const {
-        // countryList,
         countryToolTip,
         path,
         svg
