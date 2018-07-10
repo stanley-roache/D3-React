@@ -3,7 +3,7 @@ export const initialState = {
   data: ''
 }
 
-export default function data(state = [], action) {
+export default function data(state = initialState, action) {
     switch (action.type) {
         case 'REQUEST_COUNTRIES':
             return {

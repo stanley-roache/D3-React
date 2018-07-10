@@ -13,7 +13,7 @@ import {CO2} from '../../server/data/co2'
 
 import {connect} from 'react-redux'
 
-import {updateDataAction} from '../actions/data'
+import {fetchGraph} from '../actions/data'
 
 class App extends Component {
   constructor(props) {
@@ -34,21 +34,23 @@ class App extends Component {
   }
 
   componentDidUpdate(prevProps, prevState) {
-    if (prevProps.country != this.props.country) this.fetchGraph({
-      country: this.props.country,
-      start: 1950,
-      end: 2018
-    })
+    if (prevProps.country != this.props.country) this.props.dispatch(
+      fetchGraph({
+        country: this.props.country,
+        start: 1950,
+        end: 2018
+      })
+    )
   }
 
-  fetchGraph(selection) {
-    const {country, start, end} = selection
-    getTotalByCountryFromXUntilY(country, start, end)
-      .then(data => {
-        console.log('success fetching data', data[0]);
-        this.props.dispatch(updateDataAction(data))
-      })
-  }
+  // fetchGraph(selection) {
+  //   const {country, start, end} = selection
+  //   getTotalByCountryFromXUntilY(country, start, end)
+  //     .then(data => {
+  //       console.log('success fetching data', data[0]);
+  //       this.props.dispatch(updateDataAction(data))
+  //     })
+  // }
   // <DisplayTemp />
 
   render() {
