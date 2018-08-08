@@ -1,11 +1,13 @@
-const db = require('./connection')
+const conn = require('./connection')
 
-function getAvailableDataForCountry (name) {
+function getAvailableDataForCountry (name, testDb) {
+  const db = testDb || conn
   return db('population')
     .where({name})
 }
 
-function injectData (parcel) {
+function injectData (parcel, testDb) {
+  const db = testDb || conn
   return checkExists(parcel.name)
     .then(exists => {
       return (exists)
@@ -14,13 +16,15 @@ function injectData (parcel) {
     })
 }
 
-function updateCountryData (parcel) {
+function updateCountryData (parcel, testDb) {
+  const db = testDb || conn
   return db('population')
     .where({name: parcel.name})
     .update(parcel.years)
 }
 
-function insertCountryData (parcel) {
+function insertCountryData (parcel, testDb) {
+  const db = testDb || conn
   return db('population')
     .insert({
       name: parcel.name,
@@ -28,7 +32,8 @@ function insertCountryData (parcel) {
     })
 }
 
-function checkExists (name) {
+function checkExists (name, testDb) {
+  const db = testDb || conn
   return db('population')
     .where({name})
     .first()
@@ -37,5 +42,8 @@ function checkExists (name) {
 
 module.exports = {
   getAvailableDataForCountry,
-  injectData
+  injectData,
+  checkExists,
+  insertCountryData,
+  updateCountryData
 }
