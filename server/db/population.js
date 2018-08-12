@@ -8,11 +8,11 @@ function getAvailableDataForCountry (name, testDb) {
 
 function injectData (parcel, testDb) {
   const db = testDb || conn
-  return checkExists(parcel.name)
+  return checkExists(parcel.name, db)
     .then(exists => {
       return (exists)
-      ? updateCountryData(parcel)
-      : insertCountryData(parcel)
+      ? updateCountryData(parcel, db)
+      : insertCountryData(parcel, db)
     })
 }
 
