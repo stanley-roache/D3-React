@@ -38,8 +38,8 @@ describe('population database', () => {
       const newData = {
         name: 'New Brad',
         years: {
-          '1952': 3,
-          '1953': 4
+          1952: 3,
+          1953: 4
         }
       }
 
