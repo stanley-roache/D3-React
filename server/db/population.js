@@ -4,6 +4,7 @@ function getAvailableDataForCountry (name, testDb) {
   const db = testDb || conn
   return db('population')
     .where({name})
+    .first()
 }
 
 function injectData (parcel, testDb) {
