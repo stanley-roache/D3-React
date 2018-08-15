@@ -24,11 +24,12 @@ function fetchAndInjectMissing(data, start, end) {
   availableYears.forEach(year => {
     totalData.years[year] = data[year]
   })
-  console.log(totalData);
-  
-  // separate existing years from needed years, fetch, store
 
-  return api.getTotalByCountryFromXUntilY(data.name, start, end)
+  const firstMissingYear = +availableYears[availableYears.length - 1]
+  
+  return (availableYears[availableYears.length - 1] == end)
+    ? Promise.resolve(totalData)
+    : api.getTotalByCountryFromXUntilY(data.name, start, end)
     .then(data => {
         return db.injectData({
           name: country,
