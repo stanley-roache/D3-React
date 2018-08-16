@@ -13,60 +13,66 @@ function fetchAndInjectAll(country, start, end) {
     })
 }
 
-function fetchAndInjectMissing(data, start, end) {
-  const country = data.name
-  const availableData = {
-    name: country,
+function fetchAndInjectMissing(existingData, start, end) {
+  const totalData = {
+    name: existingData.name,
     years: []
   }
-  const availableYears = Object.keys(data).filter(key => {
-    return typeof data[key] == 'number' && key != 'id'
-  })
+  const availableYears = Object.keys(existingData).filter(key => {
+    return typeof existingData[key] == 'number' && key != 'id'
+  }).sort((a,b) => Number(a) - Number(b))
   availableYears.forEach(year => {
-    availableData.years[year] = data[year]
+    totalData.years[year] = existingData[year]
   })
 
   const firstLaterYear = Number(availableYears[availableYears.length - 1]) + 1
   const lastPriorYear = Number(availableYears[0]) - 1
-  let results = Promise.resolve(availableData)
+  
+  let addingData = Promise.resolve(totalData)
 
   if (firstLaterYear <= Number(end)) {
-    results = results.then(accumulator => {
-      api.getTotalByCountryFromXUntilY(data.name, firstLaterYear, end)
+    addingData = addingData.then(() => {
+      return api.getTotalByCountryFromXUntilY(existingData.name, firstLaterYear, end)
         .then(newData => {
-          const newYears = newData.map(item => ({
+          const laterYears = newData.map(item => ({
             [item.year]: item.population
           }))
-          newYears.forEach(year => {
-            accumulator.years.push(year)
+          laterYears.forEach(year => {
+            totalData.years.push(year)
           })
           return db.injectData({
-            name: country,
-            years: newYears
-          }).then(() => accumulator)
+            name: existingData.name,
+            years: laterYears
+          })
         })
     })
   }
 
   if (lastPriorYear >= Number(start)) {
-    results = results.then(accumulator => {
-      api.getTotalByCountryFromXUntilY(data.name, start, lastPriorYear)
+    addingData = addingData.then(() => {
+      return api.getTotalByCountryFromXUntilY(existingData.name, start, lastPriorYear)
         .then(newData => {
-          const newYears = newData.map(item => ({
+          const priorYears = newData.map(item => ({
             [item.year]: item.population
           }))
-          newYears.forEach(year => {
-            accumulator.years.push(year)
+          priorYears.forEach(year => {
+            totalData.years.push(year)
           })
           return db.injectData({
-            name: country,
-            years: newYears
-          }).then(() => accumulator)
+            name: existingData.name,
+            years: priorYears
+          })
         })
     })
   }
 
-  return accumulator
+  return addingData.then(() => {
+    totalData.years = totalData.years.filter(item => {
+      const year = Object.keys(item)[0]
+      return Number(year) <= Number(end) && Number(year) >= Number(start)
+    })
+    return totalData
+  })
 }
 
 module.exports = {
