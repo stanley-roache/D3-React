@@ -13,7 +13,7 @@ router.get('/total/:country/:start/:end/', (req, res) => {
     // either get all data or jsut the missing data, insert into DB and resolve with everything
     .then(data => {
       return (data)
-        ? fetchAndInjectMissing(data, start, end)
+        ? fetchAndInjectMissing(country, data, start, end)
         : fetchAndInjectAll(country, start, end)
     })
     .then(data => { res.json(data) })
