@@ -26,6 +26,7 @@ function updateCountryData (parcel, testDb) {
 
 function insertCountryData (parcel, testDb) {
   const db = testDb || conn
+
   return db('population')
     .insert({
       name: parcel.name,

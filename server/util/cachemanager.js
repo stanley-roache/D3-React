@@ -13,18 +13,13 @@ function fetchAndInjectAll(country, start, end) {
     })
 }
 
-function fetchAndInjectMissing(existingData, start, end) {
-  const totalData = {
-    name: existingData.name,
-    years: []
-  }
-
-  const availableYears = Object.keys(existingData).filter(key => {
-    return typeof existingData[key] == 'number' && key != 'id'
+function fetchAndInjectMissing(data, start, end) {
+  const availableYears = Object.keys(data).filter(key => {
+    return typeof data[key] == 'number' && key != 'id'
   }).sort((a,b) => Number(a) - Number(b))
-  
+
   availableYears.forEach(year => {
-    totalData.years[year] = existingData[year]
+    totalData.years[year] = data[year]
   })
 
   const firstLaterYear = Number(availableYears[availableYears.length - 1]) + 1
@@ -34,7 +29,7 @@ function fetchAndInjectMissing(existingData, start, end) {
 
   if (firstLaterYear <= Number(end)) {
     addingData = addingData.then(() => {
-      return api.getTotalByCountryFromXUntilY(existingData.name, firstLaterYear, end)
+      return api.getTotalByCountryFromXUntilY(data.name, firstLaterYear, end)
         .then(newData => {
           const laterYears = newData.map(item => ({
             [item.year]: item.population
@@ -43,7 +38,7 @@ function fetchAndInjectMissing(existingData, start, end) {
             totalData.years.push(year)
           })
           return db.injectData({
-            name: existingData.name,
+            name: data.name,
             years: laterYears
           })
         })
@@ -52,7 +47,7 @@ function fetchAndInjectMissing(existingData, start, end) {
 
   if (lastPriorYear >= Number(start)) {
     addingData = addingData.then(() => {
-      return api.getTotalByCountryFromXUntilY(existingData.name, start, lastPriorYear)
+      return api.getTotalByCountryFromXUntilY(data.name, start, lastPriorYear)
         .then(newData => {
           const priorYears = newData.map(item => ({
             [item.year]: item.population
@@ -61,7 +56,7 @@ function fetchAndInjectMissing(existingData, start, end) {
             totalData.years.push(year)
           })
           return db.injectData({
-            name: existingData.name,
+            name: data.name,
             years: priorYears
           })
         })
