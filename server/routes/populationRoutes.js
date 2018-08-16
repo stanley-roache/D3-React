@@ -10,13 +10,12 @@ router.get('/total/:country/:start/:end/', (req, res) => {
 
   // check what is available in DB
   popDB.getAvailableDataForCountry(country)
+    // either get all data or jsut the missing data, insert into DB and resolve with everything
     .then(data => {
       return (data)
         ? fetchAndInjectMissing(data, start, end)
         : fetchAndInjectAll(country, start, end)
     })
-
-  pop.getTotalByCountryFromXUntilY(country, start, end)
     .then(data => { res.json(data) })
 })
 

@@ -18,9 +18,11 @@ function fetchAndInjectMissing(existingData, start, end) {
     name: existingData.name,
     years: []
   }
+
   const availableYears = Object.keys(existingData).filter(key => {
     return typeof existingData[key] == 'number' && key != 'id'
   }).sort((a,b) => Number(a) - Number(b))
+  
   availableYears.forEach(year => {
     totalData.years[year] = existingData[year]
   })
