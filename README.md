@@ -5,7 +5,6 @@ This is a simple app that displays a graph of population of a given country sinc
 ## Globe Selector 
 
 This project makes use of a D3 selector as found <a href="http://bl.ocks.org/KoGor/5994804">here</a> licensed under <a href="https://choosealicense.com/licenses/mit/">MIT</a>, this code is coaxed to work with React and used as a Country Selector
-#### More merging tactics: react-faux-dom
 
 ## React-faux-dom
 
