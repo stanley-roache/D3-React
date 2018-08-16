@@ -12,9 +12,8 @@ function fetchAndInjectAll(country, start, end) {
 }
 
 function fetchAndInjectMissing(country, data, start, end) {
-  const availableYears = Object.keys(data).filter(key => {
-    return typeof data[key] == 'number' && key != 'id'
-  }).sort((a,b) => Number(a) - Number(b))
+  const availableYears = data.map(item => item.year)
+    .sort((a,b) => Number(a) - Number(b))
 
   const firstLaterYear = Number(availableYears[availableYears.length - 1]) + 1
   const lastPriorYear = Number(availableYears[0]) - 1

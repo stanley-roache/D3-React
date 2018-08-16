@@ -9,22 +9,19 @@ function prepareForDB (parcel) {
 }
 
 function parseFromDB (raw) {
-  const parcel = {
-    name: raw.name,
-    years: []
-  }
+  let data = []
 
   delete raw.id 
   delete raw.name
 
   Object.keys(raw).forEach(year => {
-    parcel.years.push({
+    data.push({
       year: Number(year),
       population: raw[year]
     })
   })
 
-  return parcel
+  return data
 }
 
 module.exports = {

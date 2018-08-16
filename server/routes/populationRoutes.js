@@ -8,13 +8,12 @@ const { fetchAndInjectAll, fetchAndInjectMissing } = require('../util/cachemanag
 router.get('/total/:country/:start/:end/', (req, res) => {
   const { country, start, end } = req.params
 
-  // check what is available in DB
-  popDB.getAvailableDataForCountry(country)
-    // either get all data or jsut the missing data, insert into DB and resolve with everything
-    .then(data => {
-      return (data)
-        ? fetchAndInjectMissing(country, data, start, end)
-        : fetchAndInjectAll(country, start, end)
+  popDB.checkExists(country)
+    .then(exists => {
+      return (!exists)
+      ? fetchAndInjectAll(country, start, end)
+      : popDB.getAvailableDataForCountry(country)
+          .then(data => fetchAndInjectMissing(country, data, start, end))
     })
     .then(data => { res.json(data) })
 })
