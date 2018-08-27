@@ -12,6 +12,7 @@ I'm using <a href="https://github.com/Olical/react-faux-dom">react-faux-dom</a> 
 
 ## The Data 
 
+Population data is being pulled from <a href="http://api.population.io">World Population API</a>. Data for select countries and regions is available from 1950 - 2018 and projected up to 2100
 
 ### Note Dump
 - Climate data to play with:
