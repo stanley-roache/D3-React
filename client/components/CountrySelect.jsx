@@ -7,21 +7,23 @@ import {selectCountryAction} from '../actions/country'
 
 const CountrySelect = props => (
   <Select
-    value={props.country}
+    value={optionFromString(props.country)}
     onChange={props.onChangeCountry}
-    options={props.countryList.map(country => (
-      { 
-        value: country.id, 
-        name: country.name
-      }
-    ))}
+    options={props.countryList.map(country => optionFromString(country.name))}
   />
 )
+
+function optionFromString (country) {
+  return { 
+    value: country, 
+    label: country
+  }
+}
 
 const mapStateToProps = ({countryList, country}) => ({countryList, country})
 
 const mapDispatchToProps = dispatch => ({
-  onChangeCountry: selected => dispatch(selectCountryAction(selected.name))
+  onChangeCountry: selected => dispatch(selectCountryAction(selected.label))
 })
 
 export default connect(mapStateToProps, mapDispatchToProps)(CountrySelect)
