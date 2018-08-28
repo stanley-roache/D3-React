@@ -63,11 +63,6 @@ function getCountryList(callback) {
       return res.body
     })
 }
-// getWorldPopulationRecordUntil(2000)
-//   .then(results => {
-//     console.log(results);
-//   })
-
 
 module.exports = {
   getDetailedByCountryInYear,
