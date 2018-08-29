@@ -1,4 +1,5 @@
 import {getTotalByCountryFromXUntilY} from '../apis/population'
+import getAPIName from '../util/countryDict'
 
 function receiveDataAction(data) {
     return {
@@ -13,10 +14,17 @@ function requestDataAction() {
     }
 }
 
+function failedDataAction() {
+  return {
+    type: 'NO_DATA'
+  }
+}
+
 export function fetchGraph(selection) {
   return dispatch => {
     dispatch(requestDataAction())
-    const {country, start, end} = selection
+    const {start, end} = selection
+    const country = getAPIName(selection.country) 
     getTotalByCountryFromXUntilY(country, start, end)
       .then(data => {
         console.log('success fetching data', data[0]);

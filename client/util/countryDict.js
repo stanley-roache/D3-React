@@ -1,4 +1,4 @@
-countries = [
+const countries = [
   { id: 4, globe_name: "Afghanistan", api_name: "Afghanistan" },
   { id: 8, globe_name: "Albania", api_name: "Albania" },
   { id: 12, globe_name: "Algeria", api_name: "Algeria" },
@@ -174,3 +174,7 @@ countries = [
   { id: 894, globe_name: "Zambia", api_name: "Zambia" },
   { id: 716, globe_name: "Zimbabwe", api_name: "Zimbabwe" }
 ]
+
+export default function (name) {
+  return countries.find(country => country.globe_name == name).api_name
+} 
