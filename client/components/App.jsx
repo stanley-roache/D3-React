@@ -35,7 +35,7 @@ class App extends Component {
       case 'fetching':
         return <h1 className='title'>Fetching Data</h1>
       case '' || 'none':
-        return <h1>No data to show</h1>
+        return <h1 className='title'>No data to show</h1>
     }
   }
 
@@ -43,11 +43,7 @@ class App extends Component {
     return (
       <div className='app-container section'>
         {this.props.fetchStatus.countries === 'received' &&
-          <CountrySelect 
-            style={{
-              marginBottom: '200px'
-            }}  
-          />
+          <CountrySelect />
         }
         <div className='level'>
           <div className='level-item has-text-centered text-selector'>
