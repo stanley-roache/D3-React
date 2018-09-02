@@ -59,7 +59,6 @@ class PopulationGraph extends Component {
   }
 
   animateChart() {
-    const faux = this.props.faux
     const { svg, g, xAxis, yAxis, xScale, yScale, line, path } = this.state.handles
 
     const margin = { top: 20, right: 20, bottom: 30, left: 80 };
@@ -107,21 +106,28 @@ class PopulationGraph extends Component {
     //  .attr("text-anchor", "end")
     //  .text("Population");
 
-    path.datum(data)
-      .attr('fill', 'none')
-      .attr('stroke', 'steelblue')
-      .attr("stroke-linejoin", "round")
-      .attr("stroke-linecap", "round")
-      .attr("stroke-width", 1.5)
-      .attr("d", line);
+    path.attr("d", line(data))
+      .attr("stroke", "steelblue")
+      .attr("stroke-width", "2")
+      .attr("fill", "none")
+    // .attr("stroke-linejoin", "round")
+    // .attr("stroke-linecap", "round")
 
+    console.log(path.node());
+    const totalLength = path.node().getTotalLength();
 
-    this.props.drawFauxDOM()
+    
+    path.attr("stroke-dasharray", totalLength + " " + totalLength)
+      .attr("stroke-dashoffset", totalLength)
+      .transition()
+        .duration(2000)
+        .ease("linear")
+        .attr("stroke-dashoffset", 0);
+
+    this.props.animateFauxDOM(2010)
   }
 
   render() {
-    console.log(this.props.data);
-
     return (
       <div className="container" >
         <h1 className='title'>Population</h1>
