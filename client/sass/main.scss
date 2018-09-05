@@ -3,7 +3,7 @@
 .population-line {
   stroke-dasharray: 1000;
   stroke-dashoffset: 1000;
-  animation: drawpath 2s steps(100) forwards; 
+  animation: drawpath 1s steps(120) forwards; 
 }
 
 @keyframes drawpath{
